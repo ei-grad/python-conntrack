@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2009 Andrew Grigorev <andrew@ei-grad.ru>
+# Copyright (c) 2009-2010 Andrew Grigorev <andrew@ei-grad.ru>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -346,5 +346,5 @@ class ConnectionManager(object):
 
         pass
 
-__all__ = ["EventListener", "ConnectionManager", "NFCT_O_XML", "NFCT_O_PLAIN", "IPPROTO_TCP", "IPPROTO_UDP", "AF_INET", "AF_INET6"]
+__all__ = ["EventListener", "ConnectionManager", "NFCT_O_XML", "NFCT_O_PLAIN", "NFCT_T_NEW", "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL", "IPPROTO_TCP", "IPPROTO_UDP", "AF_INET", "AF_INET6"]
 
