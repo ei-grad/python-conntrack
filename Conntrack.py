@@ -226,29 +226,26 @@ class ConnectionManager(object):
     '''
     Could list all connections, get information about single connection.
     Has ability to destroy connections.
-
-    format: format of messages
-        - NFCT_O_XML
-        - NFCT_O_PLAIN
-
-    family: protocol family to work with
-        - AF_INET
-        - AF_INET6
-        - ...
-        See socket.AF_*
     '''
 
     def __init__(self, format=NFCT_O_XML, family=AF_INET):
+        '''
+        Create new ConnectionManager object
+
+        format: format of returned messages
+            - NFCT_O_XML
+            - NFCT_O_PLAIN
+
+        family: protocol family to work with
+            - AF_INET
+            - AF_INET6
+        '''
+
         self.__format = format
         self.__family = family
     
-    def set_format(self, format):
-        self.__format = format
-
     def list(self):
-        '''
-        Get list of active connections from conntrack.
-        '''
+        '''Get list of active connections from conntrack.'''
         
         l = []
 
@@ -256,7 +253,8 @@ class ConnectionManager(object):
         
         @NFCT_CALLBACK
         def cb(type, ct, data):
-            nfct.nfct_snprintf(buf, 1024, ct, type, self.__format, NFCT_OF_TIME)
+            nfct.nfct_snprintf(buf, 1024, ct, type, self.__format,
+                NFCT_OF_TIME)
             l.append(buf.value)
             return NFCT_CB_CONTINUE
 
@@ -390,8 +388,10 @@ class ConnectionManager(object):
    
         nfct.nfct_close(h)
 
-        return
 
-
-__all__ = ["EventListener", "ConnectionManager", "NFCT_O_XML", "NFCT_O_PLAIN", "NFCT_T_NEW", "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL", "IPPROTO_TCP", "IPPROTO_UDP", "AF_INET", "AF_INET6"]
+__all__ = [ "EventListener", "ConnectionManager",
+    "NFCT_O_XML", "NFCT_O_PLAIN", "NFCT_T_NEW",
+    "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL",
+    "IPPROTO_TCP", "IPPROTO_UDP",
+    "AF_INET", "AF_INET6" ]
 
