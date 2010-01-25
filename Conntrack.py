@@ -270,9 +270,9 @@ class ConnectionManager(object):
         ret = nfct.nfct_query(h, NFCT_Q_DUMP, byref(c_int(self.__family)))
         if ret == -1:
             libc.perror("nfct_query")
-            nfct.nfct_close(h);
+            nfct.nfct_close(h)
             raise Exception("nfct_query failed!")
-        nfct.nfct_close(h);
+        nfct.nfct_close(h)
         return l
 
     def get(self, proto, src, dst, sport, dport):
@@ -288,32 +288,32 @@ class ConnectionManager(object):
         
         l = []
 
-        ct = nfct.nfct_new();
+        ct = nfct.nfct_new()
         if not ct:
-            libc.perror("nfct_new");
+            libc.perror("nfct_new")
             raise Exception("nfct_new failed!")
    
-        nfct.nfct_set_attr_u8(ct, ATTR_L3PROTO, self.__family);
+        nfct.nfct_set_attr_u8(ct, ATTR_L3PROTO, self.__family)
         
         if self.__family == AF_INET:
             nfct.nfct_set_attr_u32(ct, ATTR_IPV4_SRC,
-                                   libc.inet_addr(src));
+                                   libc.inet_addr(src))
             nfct.nfct_set_attr_u32(ct, ATTR_IPV4_DST,
-                                   libc.inet_addr(dst));
+                                   libc.inet_addr(dst))
         elif self.__family == AF_INET6:
             nfct.nfct_set_attr_u128(ct, ATTR_IPV6_SRC,
-                                    libc.inet_addr(src));
+                                    libc.inet_addr(src))
             nfct.nfct_set_attr_u128(ct, ATTR_IPV6_DST,
-                                    libc.inet_addr(dst));
+                                    libc.inet_addr(dst))
         else:
             raise Exception("Unsupported protocol family!")
 
-        nfct.nfct_set_attr_u8(ct, ATTR_L4PROTO, proto);
+        nfct.nfct_set_attr_u8(ct, ATTR_L4PROTO, proto)
         
-        nfct.nfct_set_attr_u16(ct, ATTR_PORT_SRC, libc.htons(sport));
-        nfct.nfct_set_attr_u16(ct, ATTR_PORT_DST, libc.htons(dport));
+        nfct.nfct_set_attr_u16(ct, ATTR_PORT_SRC, libc.htons(sport))
+        nfct.nfct_set_attr_u16(ct, ATTR_PORT_DST, libc.htons(dport))
    
-        h = nfct.nfct_open(CONNTRACK, 0);
+        h = nfct.nfct_open(CONNTRACK, 0)
         if not h:
             libc.perror("nfct_open")
             raise Exception("nfct_open failed!")
@@ -323,28 +323,75 @@ class ConnectionManager(object):
         @NFCT_CALLBACK
         def cb(type, ct, data):
             nfct.nfct_snprintf(buf, 1024, ct, NFCT_T_UNKNOWN, self.__format, 
-                NFCT_OF_SHOW_LAYER3);
+                NFCT_OF_SHOW_LAYER3)
             l.append(buf.value)
             return NFCT_CB_CONTINUE
             
-        nfct.nfct_callback_register(h, NFCT_T_ALL, cb, 0);
+        nfct.nfct_callback_register(h, NFCT_T_ALL, cb, 0)
    
-        ret = nfct.nfct_query(h, NFCT_Q_GET, ct);
+        ret = nfct.nfct_query(h, NFCT_Q_GET, ct)
    
         if ret == -1:
             libc.perror("nfct_query")
             raise Exception("nfct_query failed!")
    
-        nfct.nfct_close(h);
+        nfct.nfct_close(h)
 
         return l[0]
 
-    def kill(self, id):
+    def kill(self, proto, src, dst, sport, dport):
         '''
-        Kill specified connection.
-        '''
+        Delete specified connection.
 
-        pass
+        proto: IPPROTO_UDP or IPPROTO_TCP
+        src: source ip address
+        dst: destination ip address
+        sport: source port
+        dport: destination port
+        '''
+        
+        l = []
+
+        ct = nfct.nfct_new()
+        if not ct:
+            libc.perror("nfct_new")
+            raise Exception("nfct_new failed!")
+   
+        nfct.nfct_set_attr_u8(ct, ATTR_L3PROTO, self.__family)
+        
+        if self.__family == AF_INET:
+            nfct.nfct_set_attr_u32(ct, ATTR_IPV4_SRC,
+                                   libc.inet_addr(src))
+            nfct.nfct_set_attr_u32(ct, ATTR_IPV4_DST,
+                                   libc.inet_addr(dst))
+        elif self.__family == AF_INET6:
+            nfct.nfct_set_attr_u128(ct, ATTR_IPV6_SRC,
+                                    libc.inet_addr(src))
+            nfct.nfct_set_attr_u128(ct, ATTR_IPV6_DST,
+                                    libc.inet_addr(dst))
+        else:
+            raise Exception("Unsupported protocol family!")
+
+        nfct.nfct_set_attr_u8(ct, ATTR_L4PROTO, proto)
+        
+        nfct.nfct_set_attr_u16(ct, ATTR_PORT_SRC, libc.htons(sport))
+        nfct.nfct_set_attr_u16(ct, ATTR_PORT_DST, libc.htons(dport))
+   
+        h = nfct.nfct_open(CONNTRACK, 0)
+        if not h:
+            libc.perror("nfct_open")
+            raise Exception("nfct_open failed!")
+        
+        ret = nfct.nfct_query(h, NFCT_Q_DESTROY, ct)
+   
+        if ret == -1:
+            libc.perror("nfct_query")
+            raise Exception("nfct_query failed!")
+   
+        nfct.nfct_close(h)
+
+        return
+
 
 __all__ = ["EventListener", "ConnectionManager", "NFCT_O_XML", "NFCT_O_PLAIN", "NFCT_T_NEW", "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL", "IPPROTO_TCP", "IPPROTO_UDP", "AF_INET", "AF_INET6"]
 
