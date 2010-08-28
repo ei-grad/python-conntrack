@@ -198,8 +198,8 @@ class EventListener(Thread):
         self._stop = False
 
         @NFCT_CALLBACK
-        def cb(type, ct, data):
-            nfct.nfct_snprintf(buf, 1024, ct, type, output_format,
+        def cb(msg_type, ct, data):
+            nfct.nfct_snprintf(buf, 1024, ct, msg_type, output_format,
                     NFCT_OF_TIME)
             callback(buf.value)
             if self._stop:
@@ -349,8 +349,6 @@ class ConnectionManager(object):
         sport: source port
         dport: destination port
         '''
-
-        l = []
 
         ct = nfct.nfct_new()
         if not ct:
