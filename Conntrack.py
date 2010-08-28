@@ -8,10 +8,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -79,91 +79,91 @@ NFCT_CB_CONTINUE    = 1    # keep iterating through data
 NFCT_CB_STOLEN      = 2    # like continue, but ct is not freed
 
 # attributes
-ATTR_ORIG_IPV4_SRC = 0                    # u32 bits 
-ATTR_IPV4_SRC = ATTR_ORIG_IPV4_SRC        # alias 
-ATTR_ORIG_IPV4_DST = 1                    # u32 bits 
-ATTR_IPV4_DST = ATTR_ORIG_IPV4_DST        # alias 
-ATTR_REPL_IPV4_SRC = 2                    # u32 bits 
-ATTR_REPL_IPV4_DST = 3                    # u32 bits 
-ATTR_ORIG_IPV6_SRC = 4                    # u128 bits 
-ATTR_IPV6_SRC = ATTR_ORIG_IPV6_SRC        # alias 
-ATTR_ORIG_IPV6_DST = 5                    # u128 bits 
-ATTR_IPV6_DST = ATTR_ORIG_IPV6_DST        # alias 
-ATTR_REPL_IPV6_SRC = 6                    # u128 bits 
-ATTR_REPL_IPV6_DST = 7                    # u128 bits 
-ATTR_ORIG_PORT_SRC = 8                    # u16 bits 
-ATTR_PORT_SRC = ATTR_ORIG_PORT_SRC        # alias 
-ATTR_ORIG_PORT_DST = 9                    # u16 bits 
-ATTR_PORT_DST = ATTR_ORIG_PORT_DST        # alias 
-ATTR_REPL_PORT_SRC = 10                   # u16 bits 
-ATTR_REPL_PORT_DST = 11                   # u16 bits 
-ATTR_ICMP_TYPE = 12                       # u8 bits 
-ATTR_ICMP_CODE = 13                       # u8 bits 
-ATTR_ICMP_ID = 14                         # u16 bits 
-ATTR_ORIG_L3PROTO = 15                    # u8 bits 
-ATTR_L3PROTO = ATTR_ORIG_L3PROTO          # alias 
-ATTR_REPL_L3PROTO = 16                    # u8 bits 
-ATTR_ORIG_L4PROTO = 17                    # u8 bits 
-ATTR_L4PROTO = ATTR_ORIG_L4PROTO          # alias 
-ATTR_REPL_L4PROTO = 18                    # u8 bits 
-ATTR_TCP_STATE = 19                       # u8 bits 
-ATTR_SNAT_IPV4 = 20                       # u32 bits 
-ATTR_DNAT_IPV4 = 21                       # u32 bits 
-ATTR_SNAT_PORT = 22                       # u16 bits 
-ATTR_DNAT_PORT = 23                       # u16 bits 
-ATTR_TIMEOUT = 24                         # u32 bits 
-ATTR_MARK = 25                            # u32 bits 
-ATTR_ORIG_COUNTER_PACKETS = 26            # u32 bits 
-ATTR_REPL_COUNTER_PACKETS = 27            # u32 bits 
-ATTR_ORIG_COUNTER_BYTES = 28              # u32 bits 
-ATTR_REPL_COUNTER_BYTES = 29              # u32 bits 
-ATTR_USE = 30                             # u32 bits 
-ATTR_ID = 31                              # u32 bits 
-ATTR_STATUS = 32                          # u32 bits  
-ATTR_TCP_FLAGS_ORIG = 33                  # u8 bits 
-ATTR_TCP_FLAGS_REPL = 34                  # u8 bits 
-ATTR_TCP_MASK_ORIG = 35                   # u8 bits 
-ATTR_TCP_MASK_REPL = 36                   # u8 bits 
-ATTR_MASTER_IPV4_SRC = 37                 # u32 bits 
-ATTR_MASTER_IPV4_DST = 38                 # u32 bits 
-ATTR_MASTER_IPV6_SRC = 39                 # u128 bits 
-ATTR_MASTER_IPV6_DST = 40                 # u128 bits 
-ATTR_MASTER_PORT_SRC = 41                 # u16 bits 
-ATTR_MASTER_PORT_DST = 42                 # u16 bits 
-ATTR_MASTER_L3PROTO = 43                  # u8 bits 
-ATTR_MASTER_L4PROTO = 44                  # u8 bits 
-ATTR_SECMARK = 45                         # u32 bits 
-ATTR_ORIG_NAT_SEQ_CORRECTION_POS = 46     # u32 bits 
-ATTR_ORIG_NAT_SEQ_OFFSET_BEFORE = 47      # u32 bits 
-ATTR_ORIG_NAT_SEQ_OFFSET_AFTER = 48       # u32 bits 
-ATTR_REPL_NAT_SEQ_CORRECTION_POS = 49     # u32 bits 
-ATTR_REPL_NAT_SEQ_OFFSET_BEFORE = 50      # u32 bits 
-ATTR_REPL_NAT_SEQ_OFFSET_AFTER = 51       # u32 bits 
-ATTR_SCTP_STATE = 52                      # u8 bits 
-ATTR_SCTP_VTAG_ORIG = 53                  # u32 bits 
-ATTR_SCTP_VTAG_REPL = 54                  # u32 bits 
-ATTR_HELPER_NAME = 55                     # string (30 bytes max) 
-ATTR_DCCP_STATE = 56                      # u8 bits 
-ATTR_DCCP_ROLE = 57                       # u8 bits 
-ATTR_DCCP_HANDSHAKE_SEQ = 58              # u64 bits 
+ATTR_ORIG_IPV4_SRC = 0                    # u32 bits
+ATTR_IPV4_SRC = ATTR_ORIG_IPV4_SRC        # alias
+ATTR_ORIG_IPV4_DST = 1                    # u32 bits
+ATTR_IPV4_DST = ATTR_ORIG_IPV4_DST        # alias
+ATTR_REPL_IPV4_SRC = 2                    # u32 bits
+ATTR_REPL_IPV4_DST = 3                    # u32 bits
+ATTR_ORIG_IPV6_SRC = 4                    # u128 bits
+ATTR_IPV6_SRC = ATTR_ORIG_IPV6_SRC        # alias
+ATTR_ORIG_IPV6_DST = 5                    # u128 bits
+ATTR_IPV6_DST = ATTR_ORIG_IPV6_DST        # alias
+ATTR_REPL_IPV6_SRC = 6                    # u128 bits
+ATTR_REPL_IPV6_DST = 7                    # u128 bits
+ATTR_ORIG_PORT_SRC = 8                    # u16 bits
+ATTR_PORT_SRC = ATTR_ORIG_PORT_SRC        # alias
+ATTR_ORIG_PORT_DST = 9                    # u16 bits
+ATTR_PORT_DST = ATTR_ORIG_PORT_DST        # alias
+ATTR_REPL_PORT_SRC = 10                   # u16 bits
+ATTR_REPL_PORT_DST = 11                   # u16 bits
+ATTR_ICMP_TYPE = 12                       # u8 bits
+ATTR_ICMP_CODE = 13                       # u8 bits
+ATTR_ICMP_ID = 14                         # u16 bits
+ATTR_ORIG_L3PROTO = 15                    # u8 bits
+ATTR_L3PROTO = ATTR_ORIG_L3PROTO          # alias
+ATTR_REPL_L3PROTO = 16                    # u8 bits
+ATTR_ORIG_L4PROTO = 17                    # u8 bits
+ATTR_L4PROTO = ATTR_ORIG_L4PROTO          # alias
+ATTR_REPL_L4PROTO = 18                    # u8 bits
+ATTR_TCP_STATE = 19                       # u8 bits
+ATTR_SNAT_IPV4 = 20                       # u32 bits
+ATTR_DNAT_IPV4 = 21                       # u32 bits
+ATTR_SNAT_PORT = 22                       # u16 bits
+ATTR_DNAT_PORT = 23                       # u16 bits
+ATTR_TIMEOUT = 24                         # u32 bits
+ATTR_MARK = 25                            # u32 bits
+ATTR_ORIG_COUNTER_PACKETS = 26            # u32 bits
+ATTR_REPL_COUNTER_PACKETS = 27            # u32 bits
+ATTR_ORIG_COUNTER_BYTES = 28              # u32 bits
+ATTR_REPL_COUNTER_BYTES = 29              # u32 bits
+ATTR_USE = 30                             # u32 bits
+ATTR_ID = 31                              # u32 bits
+ATTR_STATUS = 32                          # u32 bits
+ATTR_TCP_FLAGS_ORIG = 33                  # u8 bits
+ATTR_TCP_FLAGS_REPL = 34                  # u8 bits
+ATTR_TCP_MASK_ORIG = 35                   # u8 bits
+ATTR_TCP_MASK_REPL = 36                   # u8 bits
+ATTR_MASTER_IPV4_SRC = 37                 # u32 bits
+ATTR_MASTER_IPV4_DST = 38                 # u32 bits
+ATTR_MASTER_IPV6_SRC = 39                 # u128 bits
+ATTR_MASTER_IPV6_DST = 40                 # u128 bits
+ATTR_MASTER_PORT_SRC = 41                 # u16 bits
+ATTR_MASTER_PORT_DST = 42                 # u16 bits
+ATTR_MASTER_L3PROTO = 43                  # u8 bits
+ATTR_MASTER_L4PROTO = 44                  # u8 bits
+ATTR_SECMARK = 45                         # u32 bits
+ATTR_ORIG_NAT_SEQ_CORRECTION_POS = 46     # u32 bits
+ATTR_ORIG_NAT_SEQ_OFFSET_BEFORE = 47      # u32 bits
+ATTR_ORIG_NAT_SEQ_OFFSET_AFTER = 48       # u32 bits
+ATTR_REPL_NAT_SEQ_CORRECTION_POS = 49     # u32 bits
+ATTR_REPL_NAT_SEQ_OFFSET_BEFORE = 50      # u32 bits
+ATTR_REPL_NAT_SEQ_OFFSET_AFTER = 51       # u32 bits
+ATTR_SCTP_STATE = 52                      # u8 bits
+ATTR_SCTP_VTAG_ORIG = 53                  # u32 bits
+ATTR_SCTP_VTAG_REPL = 54                  # u32 bits
+ATTR_HELPER_NAME = 55                     # string (30 bytes max)
+ATTR_DCCP_STATE = 56                      # u8 bits
+ATTR_DCCP_ROLE = 57                       # u8 bits
+ATTR_DCCP_HANDSHAKE_SEQ = 58              # u64 bits
 ATTR_MAX = 59
-ATTR_GRP_ORIG_IPV4 = 0                    # struct nfct_attr_grp_ipv4 
-ATTR_GRP_REPL_IPV4 = 1                    # struct nfct_attr_grp_ipv4 
-ATTR_GRP_ORIG_IPV6 = 2                    # struct nfct_attr_grp_ipv6 
-ATTR_GRP_REPL_IPV6 = 3                    # struct nfct_attr_grp_ipv6 
-ATTR_GRP_ORIG_PORT = 4                    # struct nfct_attr_grp_port 
-ATTR_GRP_REPL_PORT = 5                    # struct nfct_attr_grp_port 
-ATTR_GRP_ICMP = 6                         # struct nfct_attr_grp_icmp 
-ATTR_GRP_MASTER_IPV4 = 7                  # struct nfct_attr_grp_ipv4 
-ATTR_GRP_MASTER_IPV6 = 8                  # struct nfct_attr_grp_ipv6 
-ATTR_GRP_MASTER_PORT = 9                  # struct nfct_attr_grp_port 
-ATTR_GRP_ORIG_COUNTERS = 10               # struct nfct_attr_grp_ctrs 
-ATTR_GRP_REPL_COUNTERS = 11               # struct nfct_attr_grp_ctrs 
+ATTR_GRP_ORIG_IPV4 = 0                    # struct nfct_attr_grp_ipv4
+ATTR_GRP_REPL_IPV4 = 1                    # struct nfct_attr_grp_ipv4
+ATTR_GRP_ORIG_IPV6 = 2                    # struct nfct_attr_grp_ipv6
+ATTR_GRP_REPL_IPV6 = 3                    # struct nfct_attr_grp_ipv6
+ATTR_GRP_ORIG_PORT = 4                    # struct nfct_attr_grp_port
+ATTR_GRP_REPL_PORT = 5                    # struct nfct_attr_grp_port
+ATTR_GRP_ICMP = 6                         # struct nfct_attr_grp_icmp
+ATTR_GRP_MASTER_IPV4 = 7                  # struct nfct_attr_grp_ipv4
+ATTR_GRP_MASTER_IPV6 = 8                  # struct nfct_attr_grp_ipv6
+ATTR_GRP_MASTER_PORT = 9                  # struct nfct_attr_grp_port
+ATTR_GRP_ORIG_COUNTERS = 10               # struct nfct_attr_grp_ctrs
+ATTR_GRP_REPL_COUNTERS = 11               # struct nfct_attr_grp_ctrs
 ATTR_GRP_MAX = 12
-ATTR_EXP_MASTER = 0                       # pointer to conntrack object 
-ATTR_EXP_EXPECTED = 1                     # pointer to conntrack object 
-ATTR_EXP_MASK = 2                         # pointer to conntrack object 
-ATTR_EXP_TIMEOUT = 3                      # u32 bits 
+ATTR_EXP_MASTER = 0                       # pointer to conntrack object
+ATTR_EXP_EXPECTED = 1                     # pointer to conntrack object
+ATTR_EXP_MASK = 2                         # pointer to conntrack object
+ATTR_EXP_TIMEOUT = 3                      # u32 bits
 ATTR_EXP_MAX = 4
 
 
@@ -184,22 +184,23 @@ NFCT_T_ERROR            = (1 << NFCT_T_ERROR_BIT)
 class EventListener(Thread):
 
     def __init__(self, callback,
-                 msg_types=NFCT_T_NEW|NFCT_T_UPDATE|NFCT_T_DESTROY,
+                 msg_types=NFCT_T_NEW | NFCT_T_UPDATE | NFCT_T_DESTROY,
                  output_format=NFCT_O_XML):
         Thread.__init__(self)
-        
+
         self.h = nfct.nfct_open(CONNTRACK, NFCT_ALL_CT_GROUPS)
 
         if self.h == 0:
             libc.perror("nfct_open")
             raise Exception("nfct_open failed!")
-        
+
         buf = create_string_buffer(1024)
         self._stop = False
 
         @NFCT_CALLBACK
         def cb(type, ct, data):
-            nfct.nfct_snprintf(buf, 1024, ct, type, output_format, NFCT_OF_TIME)
+            nfct.nfct_snprintf(buf, 1024, ct, type, output_format,
+                    NFCT_OF_TIME)
             callback(buf.value)
             if self._stop:
                 return NFCT_CB_STOP
@@ -211,16 +212,17 @@ class EventListener(Thread):
 
     def run(self):
         ret = nfct.nfct_catch(self.h)
-        
+
         nfct.nfct_callback_unregister(self.h)
         nfct.nfct_close(self.h)
-        
+
         if ret == -1:
             libc.perror("nfct_catch")
             raise Exception("nfct_catch failed!")
 
     def stop(self):
         self._stop = True
+
 
 class ConnectionManager(object):
     '''
@@ -243,14 +245,14 @@ class ConnectionManager(object):
 
         self.__format = format
         self.__family = family
-    
+
     def list(self):
         '''Get list of active connections from conntrack.'''
-        
+
         l = []
 
         buf = create_string_buffer(1024)
-        
+
         @NFCT_CALLBACK
         def cb(type, ct, data):
             nfct.nfct_snprintf(buf, 1024, ct, type, self.__format,
@@ -283,16 +285,16 @@ class ConnectionManager(object):
         sport: source port
         dport: destination port
         '''
-        
+
         l = []
 
         ct = nfct.nfct_new()
         if not ct:
             libc.perror("nfct_new")
             raise Exception("nfct_new failed!")
-   
+
         nfct.nfct_set_attr_u8(ct, ATTR_L3PROTO, self.__family)
-        
+
         if self.__family == AF_INET:
             nfct.nfct_set_attr_u32(ct, ATTR_IPV4_SRC,
                                    libc.inet_addr(src))
@@ -307,32 +309,32 @@ class ConnectionManager(object):
             raise Exception("Unsupported protocol family!")
 
         nfct.nfct_set_attr_u8(ct, ATTR_L4PROTO, proto)
-        
+
         nfct.nfct_set_attr_u16(ct, ATTR_PORT_SRC, libc.htons(sport))
         nfct.nfct_set_attr_u16(ct, ATTR_PORT_DST, libc.htons(dport))
-   
+
         h = nfct.nfct_open(CONNTRACK, 0)
         if not h:
             libc.perror("nfct_open")
             raise Exception("nfct_open failed!")
-        
+
         buf = create_string_buffer(1024)
-        
+
         @NFCT_CALLBACK
         def cb(type, ct, data):
-            nfct.nfct_snprintf(buf, 1024, ct, NFCT_T_UNKNOWN, self.__format, 
+            nfct.nfct_snprintf(buf, 1024, ct, NFCT_T_UNKNOWN, self.__format,
                 NFCT_OF_SHOW_LAYER3)
             l.append(buf.value)
             return NFCT_CB_CONTINUE
-            
+
         nfct.nfct_callback_register(h, NFCT_T_ALL, cb, 0)
-   
+
         ret = nfct.nfct_query(h, NFCT_Q_GET, ct)
-   
+
         if ret == -1:
             libc.perror("nfct_query")
             raise Exception("nfct_query failed!")
-   
+
         nfct.nfct_close(h)
 
         return l[0]
@@ -347,16 +349,16 @@ class ConnectionManager(object):
         sport: source port
         dport: destination port
         '''
-        
+
         l = []
 
         ct = nfct.nfct_new()
         if not ct:
             libc.perror("nfct_new")
             raise Exception("nfct_new failed!")
-   
+
         nfct.nfct_set_attr_u8(ct, ATTR_L3PROTO, self.__family)
-        
+
         if self.__family == AF_INET:
             nfct.nfct_set_attr_u32(ct, ATTR_IPV4_SRC,
                                    libc.inet_addr(src))
@@ -371,27 +373,26 @@ class ConnectionManager(object):
             raise Exception("Unsupported protocol family!")
 
         nfct.nfct_set_attr_u8(ct, ATTR_L4PROTO, proto)
-        
+
         nfct.nfct_set_attr_u16(ct, ATTR_PORT_SRC, libc.htons(sport))
         nfct.nfct_set_attr_u16(ct, ATTR_PORT_DST, libc.htons(dport))
-   
+
         h = nfct.nfct_open(CONNTRACK, 0)
         if not h:
             libc.perror("nfct_open")
             raise Exception("nfct_open failed!")
-        
+
         ret = nfct.nfct_query(h, NFCT_Q_DESTROY, ct)
-   
+
         if ret == -1:
             libc.perror("nfct_query")
             raise Exception("nfct_query failed!")
-   
+
         nfct.nfct_close(h)
 
 
-__all__ = [ "EventListener", "ConnectionManager",
+__all__ = ["EventListener", "ConnectionManager",
     "NFCT_O_XML", "NFCT_O_PLAIN", "NFCT_T_NEW",
     "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL",
     "IPPROTO_TCP", "IPPROTO_UDP",
-    "AF_INET", "AF_INET6" ]
-
+    "AF_INET", "AF_INET6"]
