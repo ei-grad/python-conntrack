@@ -182,6 +182,9 @@ NFCT_T_ERROR            = (1 << NFCT_T_ERROR_BIT)
 
 
 class EventListener(Thread):
+    '''
+    Calling a specified callback function to notify about conntrack events.
+    '''
 
     def __init__(self, callback,
                  msg_types=NFCT_T_NEW | NFCT_T_UPDATE | NFCT_T_DESTROY,
