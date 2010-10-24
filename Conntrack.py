@@ -224,7 +224,7 @@ class EventListener(Thread):
             raise Exception("nfct_catch failed!")
 
     def stop(self):
-        self.nfct_callback_unregister(self.h)
+        nfct.nfct_callback_unregister(self.h)
         self._stop = True
 
 
