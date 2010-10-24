@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='Conntrack',
-    version='0.3',
+    version='0.4',
     description='A simple python interface to libnetfilter_conntrack using ctypes.',
     author='Andrew Grigorev',
     author_email='andrew@ei-grad.ru',
