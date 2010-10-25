@@ -21,6 +21,9 @@
 # THE SOFTWARE.
 #
 
+"""
+Conntrack - A simple python interface to libnetfilter_conntrack using ctypes.
+"""
 
 import sys
 from ctypes import *
@@ -181,6 +184,16 @@ NFCT_T_ERROR_BIT        = 31
 NFCT_T_ERROR            = (1 << NFCT_T_ERROR_BIT)
 
 
+get_errno_loc = libc.__errno_location
+get_errno_loc.restype = POINTER(c_int)
+
+def nfct_catch_errcheck(ret, func, args):
+    if ret == -1:
+        e = get_errno_loc()[0]
+        if e == 105: # ENOBUFS
+            raise OSError('No buffer space available.')
+
+
 class EventListener(Thread):
     '''
     Calling a specified callback function to notify about conntrack events.
@@ -198,15 +211,12 @@ class EventListener(Thread):
             raise Exception("nfct_open failed!")
 
         buf = create_string_buffer(1024)
-        self._stop = False
 
         @NFCT_CALLBACK
         def cb(msg_type, ct, data):
             nfct.nfct_snprintf(buf, 1024, ct, msg_type, output_format,
                     NFCT_OF_TIME)
             callback(buf.value)
-            if self._stop:
-                return NFCT_CB_STOP
             return NFCT_CB_CONTINUE
 
         self.cb = cb
@@ -214,18 +224,12 @@ class EventListener(Thread):
         nfct.nfct_callback_register(self.h, msg_types, self.cb, 0)
 
     def run(self):
-        ret = nfct.nfct_catch(self.h)
-
-        nfct.nfct_callback_unregister(self.h)
-        nfct.nfct_close(self.h)
-
-        if ret == -1:
-            libc.perror("nfct_catch")
-            raise Exception("nfct_catch failed!")
+        nfct.nfct_catch.errcheck = nfct_catch_errcheck
+        nfct.nfct_catch(self.h)
 
     def stop(self):
-        nfct.nfct_callback_unregister(self.h)
-        self._stop = True
+        nfct.nfct_close(self.h)
+        self.join()
 
 
 class ConnectionManager(object):
@@ -234,20 +238,20 @@ class ConnectionManager(object):
     Has ability to destroy connections.
     '''
 
-    def __init__(self, format=NFCT_O_XML, family=AF_INET):
+    def __init__(self, fmt=NFCT_O_XML, family=AF_INET):
         '''
         Create new ConnectionManager object
 
-        format: format of returned messages
+        @param fmt: format of returned messages
             - NFCT_O_XML
             - NFCT_O_PLAIN
 
-        family: protocol family to work with
+        @param family: protocol family to work with
             - AF_INET
             - AF_INET6
         '''
 
-        self.__format = format
+        self.__format = fmt
         self.__family = family
 
     def list(self):
