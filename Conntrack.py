@@ -413,7 +413,8 @@ class ConnectionManager(object):
 
 
 __all__ = ["EventListener", "ConnectionManager",
-    "NFCT_O_XML", "NFCT_O_PLAIN", "NFCT_T_NEW",
-    "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL",
-    "IPPROTO_TCP", "IPPROTO_UDP",
-    "AF_INET", "AF_INET6"]
+        "parse_plaintext_event",
+        "NFCT_O_XML", "NFCT_O_PLAIN", "NFCT_T_NEW",
+        "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL",
+        "IPPROTO_TCP", "IPPROTO_UDP",
+        "AF_INET", "AF_INET6"]
