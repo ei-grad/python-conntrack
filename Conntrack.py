@@ -216,7 +216,7 @@ class EventListener(Thread):
 
     def __init__(self, callback,
                  msg_types=NFCT_T_NEW | NFCT_T_UPDATE | NFCT_T_DESTROY,
-                 output_format=NFCT_O_XML):
+                 output_format=NFCT_O_PLAIN):
         Thread.__init__(self)
 
         self.h = nfct.nfct_open(CONNTRACK, NFCT_ALL_CT_GROUPS)
