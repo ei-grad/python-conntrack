@@ -193,6 +193,21 @@ def nfct_catch_errcheck(ret, func, args):
         if e == 105: # ENOBUFS
             raise OSError('No buffer space available.')
 
+def plaintext_event_to_dict(event):
+    '''
+    Convert conntrack event from NFCT_O_PLAIN format to dict.
+
+    @return: tuple(proto, dict(in), dict(out))
+    '''
+
+    e = str(event, 'utf-8').split()
+    proto = e[1]
+    pairs = [ i.split('=') for i in e if '=' in i ]
+    n = len(pairs) >> 1
+    d_in = dict(pairs[:n])
+    d_out = dict(pairs[n:])
+    return proto, d_in, d_out
+
 
 class EventListener(Thread):
     '''
