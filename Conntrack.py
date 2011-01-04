@@ -200,7 +200,10 @@ def parse_plaintext_event(event):
     @return: tuple(proto, dict(in), dict(out))
     '''
 
-    e = str(event, 'utf-8').split()
+    if sys.version_info[0] == 3:
+        e = str(event, 'utf-8').split()
+    else:
+        e = str(event).decode('utf-8').split()
     proto = e[1]
     pairs = [ i.split('=') for i in e if '=' in i ]
     n = len(pairs) >> 1
