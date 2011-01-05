@@ -26,6 +26,7 @@ Conntrack - A simple python interface to libnetfilter_conntrack using ctypes.
 """
 
 import sys
+import logging
 from ctypes import *
 from threading import Thread, Lock
 from socket import AF_INET, AF_INET6, IPPROTO_TCP, IPPROTO_UDP
@@ -221,30 +222,50 @@ class EventListener(Thread):
                  output_format=NFCT_O_PLAIN):
         Thread.__init__(self)
 
-        self.h = nfct.nfct_open(CONNTRACK, NFCT_ALL_CT_GROUPS)
+        self.msg_types = msg_types
+        self.output_format = output_format
 
-        if self.h == 0:
-            libc.perror("nfct_open")
-            raise Exception("nfct_open failed!")
+        self._running = False
 
         buf = create_string_buffer(1024)
 
         @NFCT_CALLBACK
         def cb(msg_type, ct, data):
-            nfct.nfct_snprintf(buf, 1024, ct, msg_type, output_format,
+            nfct.nfct_snprintf(buf, 1024, ct, msg_type, self.output_format,
                     NFCT_OF_TIME)
             callback(buf.value)
             return NFCT_CB_CONTINUE
 
         self.cb = cb
 
-        nfct.nfct_callback_register(self.h, msg_types, self.cb, 0)
+        self.h = self.get_handle()
+
+    def get_handle(self):
+
+        handle = nfct.nfct_open(CONNTRACK, NFCT_ALL_CT_GROUPS)
+
+        if handle == 0:
+            libc.perror("nfct_open")
+            raise Exception("nfct_open failed!")
+
+        nfct.nfct_callback_register(handle, self.msg_types, self.cb, 0)
+
+        return handle
 
     def run(self):
+        self._running = True
         nfct.nfct_catch.errcheck = nfct_catch_errcheck
-        nfct.nfct_catch(self.h)
+        while self._running:
+            try:
+                nfct.nfct_catch(self.h)
+            except OSError:
+                if self._running:
+                    logging.error('nfct_catch failed, may lose some connections')
+                    nfct.nfct_close(self.h)
+                    self.h = self.get_handle()
 
     def stop(self):
+        self._running = False
         nfct.nfct_close(self.h)
         self.join()
 
