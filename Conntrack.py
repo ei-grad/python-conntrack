@@ -184,14 +184,13 @@ NFCT_T_ERROR_BIT        = 31
 NFCT_T_ERROR            = (1 << NFCT_T_ERROR_BIT)
 
 
-get_errno_loc = libc.__errno_location
-get_errno_loc.restype = POINTER(c_int)
+libc.__errno_location.restype = POINTER(c_int)
+libc.strerror.restype = c_char_p
 
 def nfct_catch_errcheck(ret, func, args):
     if ret == -1:
-        e = get_errno_loc()[0]
-        if e == 105: # ENOBUFS
-            raise OSError('No buffer space available.')
+        e = libc.__errno_location()[0]
+        raise OSError(libc.strerror(e))
 
 def parse_plaintext_event(event):
     '''
