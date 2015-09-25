@@ -42,45 +42,45 @@ CONNTRACK = 1
 EXPECT = 2
 
 # netlink groups
-NF_NETLINK_CONNTRACK_NEW         = 0x00000001
-NF_NETLINK_CONNTRACK_UPDATE      = 0x00000002
-NF_NETLINK_CONNTRACK_DESTROY     = 0x00000004
-NF_NETLINK_CONNTRACK_EXP_NEW     = 0x00000008
-NF_NETLINK_CONNTRACK_EXP_UPDATE  = 0x00000010
+NF_NETLINK_CONNTRACK_NEW = 0x00000001
+NF_NETLINK_CONNTRACK_UPDATE = 0x00000002
+NF_NETLINK_CONNTRACK_DESTROY = 0x00000004
+NF_NETLINK_CONNTRACK_EXP_NEW = 0x00000008
+NF_NETLINK_CONNTRACK_EXP_UPDATE = 0x00000010
 NF_NETLINK_CONNTRACK_EXP_DESTROY = 0x00000020
 
-NFCT_ALL_CT_GROUPS = (NF_NETLINK_CONNTRACK_NEW | NF_NETLINK_CONNTRACK_UPDATE \
-    | NF_NETLINK_CONNTRACK_DESTROY)
+NFCT_ALL_CT_GROUPS = (NF_NETLINK_CONNTRACK_NEW | NF_NETLINK_CONNTRACK_UPDATE
+                      | NF_NETLINK_CONNTRACK_DESTROY)
 
 # nfct_*printf output format
-NFCT_O_PLAIN        = 0
-NFCT_O_DEFAULT      = NFCT_O_PLAIN
-NFCT_O_XML          = 1
-NFCT_O_MAX          = 2
+NFCT_O_PLAIN = 0
+NFCT_O_DEFAULT = NFCT_O_PLAIN
+NFCT_O_XML = 1
+NFCT_O_MAX = 2
 
 # output flags
 NFCT_OF_SHOW_LAYER3_BIT = 0
-NFCT_OF_SHOW_LAYER3     = (1 << NFCT_OF_SHOW_LAYER3_BIT)
-NFCT_OF_TIME_BIT        = 1
-NFCT_OF_TIME            = (1 << NFCT_OF_TIME_BIT)
-NFCT_OF_ID_BIT          = 2
-NFCT_OF_ID              = (1 << NFCT_OF_ID_BIT)
+NFCT_OF_SHOW_LAYER3 = (1 << NFCT_OF_SHOW_LAYER3_BIT)
+NFCT_OF_TIME_BIT = 1
+NFCT_OF_TIME = (1 << NFCT_OF_TIME_BIT)
+NFCT_OF_ID_BIT = 2
+NFCT_OF_ID = (1 << NFCT_OF_ID_BIT)
 
 # query
-NFCT_Q_CREATE           = 0
-NFCT_Q_UPDATE           = 1
-NFCT_Q_DESTROY          = 2
-NFCT_Q_GET              = 3
-NFCT_Q_FLUSH            = 4
-NFCT_Q_DUMP             = 5
-NFCT_Q_DUMP_RESET       = 6
-NFCT_Q_CREATE_UPDATE    = 7
+NFCT_Q_CREATE = 0
+NFCT_Q_UPDATE = 1
+NFCT_Q_DESTROY = 2
+NFCT_Q_GET = 3
+NFCT_Q_FLUSH = 4
+NFCT_Q_DUMP = 5
+NFCT_Q_DUMP_RESET = 6
+NFCT_Q_CREATE_UPDATE = 7
 
 # callback return code
-NFCT_CB_FAILURE     = -1   # failure
-NFCT_CB_STOP        = 0    # stop the query
-NFCT_CB_CONTINUE    = 1    # keep iterating through data
-NFCT_CB_STOLEN      = 2    # like continue, but ct is not freed
+NFCT_CB_FAILURE = -1   # failure
+NFCT_CB_STOP = 0    # stop the query
+NFCT_CB_CONTINUE = 1    # keep iterating through data
+NFCT_CB_STOLEN = 2    # like continue, but ct is not freed
 
 # attributes
 ATTR_ORIG_IPV4_SRC = 0                    # u32 bits
@@ -172,26 +172,28 @@ ATTR_EXP_MAX = 4
 
 
 # message type
-NFCT_T_UNKNOWN          = 0
-NFCT_T_NEW_BIT          = 0
-NFCT_T_NEW              = (1 << NFCT_T_NEW_BIT)
-NFCT_T_UPDATE_BIT       = 1
-NFCT_T_UPDATE           = (1 << NFCT_T_UPDATE_BIT)
-NFCT_T_DESTROY_BIT      = 2
-NFCT_T_DESTROY          = (1 << NFCT_T_DESTROY_BIT)
+NFCT_T_UNKNOWN = 0
+NFCT_T_NEW_BIT = 0
+NFCT_T_NEW = (1 << NFCT_T_NEW_BIT)
+NFCT_T_UPDATE_BIT = 1
+NFCT_T_UPDATE = (1 << NFCT_T_UPDATE_BIT)
+NFCT_T_DESTROY_BIT = 2
+NFCT_T_DESTROY = (1 << NFCT_T_DESTROY_BIT)
 
 NFCT_T_ALL = NFCT_T_NEW | NFCT_T_UPDATE | NFCT_T_DESTROY
-NFCT_T_ERROR_BIT        = 31
-NFCT_T_ERROR            = (1 << NFCT_T_ERROR_BIT)
+NFCT_T_ERROR_BIT = 31
+NFCT_T_ERROR = (1 << NFCT_T_ERROR_BIT)
 
 
 libc.__errno_location.restype = c.POINTER(c.c_int)
 libc.strerror.restype = c.c_char_p
 
+
 def nfct_catch_errcheck(ret, func, args):
     if ret == -1:
         e = libc.__errno_location()[0]
         raise OSError(libc.strerror(e))
+
 
 def parse_plaintext_event(event):
     '''
@@ -205,7 +207,7 @@ def parse_plaintext_event(event):
     else:
         e = str(event).decode('utf-8').split()
     proto = e[1]
-    pairs = [ i.split('=') for i in e if '=' in i ]
+    pairs = [i.split('=') for i in e if '=' in i]
     n = len(pairs) >> 1
     d_in = dict(pairs[:n])
     d_out = dict(pairs[n:])
@@ -213,6 +215,7 @@ def parse_plaintext_event(event):
 
 
 class EventListener(Thread):
+
     '''
     Calling a specified callback function to notify about conntrack events.
     '''
@@ -232,7 +235,7 @@ class EventListener(Thread):
         @NFCT_CALLBACK
         def cb(msg_type, ct, data):
             nfct.nfct_snprintf(buf, 1024, ct, msg_type, self.output_format,
-                    NFCT_OF_TIME)
+                               NFCT_OF_TIME)
             callback(buf.value)
             return NFCT_CB_CONTINUE
 
@@ -271,6 +274,7 @@ class EventListener(Thread):
 
 
 class ConnectionManager(object):
+
     '''
     Could list all connections, get information about single connection.
     Has ability to destroy connections.
@@ -368,7 +372,7 @@ class ConnectionManager(object):
         @NFCT_CALLBACK
         def cb(type, ct, data):
             nfct.nfct_snprintf(buf, 1024, ct, NFCT_T_UNKNOWN, self.__format,
-                NFCT_OF_SHOW_LAYER3)
+                               NFCT_OF_SHOW_LAYER3)
             l.append(buf.value)
             return NFCT_CB_CONTINUE
 
@@ -435,8 +439,8 @@ class ConnectionManager(object):
 
 
 __all__ = ["EventListener", "ConnectionManager",
-        "parse_plaintext_event",
-        "NFCT_O_XML", "NFCT_O_PLAIN", "NFCT_T_NEW",
-        "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL",
-        "IPPROTO_TCP", "IPPROTO_UDP",
-        "AF_INET", "AF_INET6"]
+           "parse_plaintext_event",
+           "NFCT_O_XML", "NFCT_O_PLAIN", "NFCT_T_NEW",
+           "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL",
+           "IPPROTO_TCP", "IPPROTO_UDP",
+           "AF_INET", "AF_INET6"]
