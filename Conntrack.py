@@ -27,15 +27,15 @@ Conntrack - A simple python interface to libnetfilter_conntrack using ctypes.
 
 import sys
 import logging
-from ctypes import *
-from threading import Thread, Lock
+import ctypes as c
+from threading import Thread
 from socket import AF_INET, AF_INET6, IPPROTO_TCP, IPPROTO_UDP
 
-nfct = CDLL('libnetfilter_conntrack.so')
-libc = CDLL('libc.so.6')
+nfct = c.CDLL('libnetfilter_conntrack.so')
+libc = c.CDLL('libc.so.6')
 
 
-NFCT_CALLBACK = CFUNCTYPE(c_int, c_int, c_void_p, c_void_p)
+NFCT_CALLBACK = c.CFUNCTYPE(c.c_int, c.c_int, c.c_void_p, c.c_void_p)
 
 # conntrack
 CONNTRACK = 1
@@ -185,8 +185,8 @@ NFCT_T_ERROR_BIT        = 31
 NFCT_T_ERROR            = (1 << NFCT_T_ERROR_BIT)
 
 
-libc.__errno_location.restype = POINTER(c_int)
-libc.strerror.restype = c_char_p
+libc.__errno_location.restype = c.POINTER(c.c_int)
+libc.strerror.restype = c.c_char_p
 
 def nfct_catch_errcheck(ret, func, args):
     if ret == -1:
@@ -227,7 +227,7 @@ class EventListener(Thread):
 
         self._running = False
 
-        buf = create_string_buffer(1024)
+        buf = c.create_string_buffer(1024)
 
         @NFCT_CALLBACK
         def cb(msg_type, ct, data):
@@ -297,12 +297,11 @@ class ConnectionManager(object):
 
         l = []
 
-        buf = create_string_buffer(1024)
+        buf = c.create_string_buffer(1024)
 
         @NFCT_CALLBACK
         def cb(type, ct, data):
-            nfct.nfct_snprintf(buf, 1024, ct, type, self.__format,
-                NFCT_OF_TIME)
+            nfct.nfct_snprintf(buf, 1024, ct, type, self.__format, NFCT_OF_TIME)
             l.append(buf.value)
             return NFCT_CB_CONTINUE
 
@@ -313,7 +312,7 @@ class ConnectionManager(object):
             raise Exception("nfct_open failed!")
 
         nfct.nfct_callback_register(h, NFCT_T_ALL, cb, 0)
-        ret = nfct.nfct_query(h, NFCT_Q_DUMP, byref(c_int(self.__family)))
+        ret = nfct.nfct_query(h, NFCT_Q_DUMP, c.byref(c.c_int(self.__family)))
         if ret == -1:
             libc.perror("nfct_query")
             nfct.nfct_close(h)
@@ -364,7 +363,7 @@ class ConnectionManager(object):
             libc.perror("nfct_open")
             raise Exception("nfct_open failed!")
 
-        buf = create_string_buffer(1024)
+        buf = c.create_string_buffer(1024)
 
         @NFCT_CALLBACK
         def cb(type, ct, data):
