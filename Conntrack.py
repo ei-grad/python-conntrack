@@ -28,11 +28,12 @@ Conntrack - A simple python interface to libnetfilter_conntrack using ctypes.
 import sys
 import logging
 import ctypes as c
+from ctypes.util import find_library
 from threading import Thread
 from socket import AF_INET, AF_INET6, IPPROTO_TCP, IPPROTO_UDP
 
-nfct = c.CDLL('libnetfilter_conntrack.so')
-libc = c.CDLL('libc.so.6')
+nfct = c.CDLL(find_library('libnetfilter_conntrack'))
+libc = c.CDLL(find_library('libc'))
 
 
 NFCT_CALLBACK = c.CFUNCTYPE(c.c_int, c.c_int, c.c_void_p, c.c_void_p)
