@@ -76,12 +76,16 @@ NFCT_Q_FLUSH = 4
 NFCT_Q_DUMP = 5
 NFCT_Q_DUMP_RESET = 6
 NFCT_Q_CREATE_UPDATE = 7
+NFCT_Q_DUMP_FILTER = 8
+NFCT_Q_DUMP_FILTER_RESET = 9
 
 # callback return code
 NFCT_CB_FAILURE = -1   # failure
 NFCT_CB_STOP = 0    # stop the query
 NFCT_CB_CONTINUE = 1    # keep iterating through data
 NFCT_CB_STOLEN = 2    # like continue, but ct is not freed
+
+NFCT_CMP_ALL = 0
 
 # attributes
 ATTR_ORIG_IPV4_SRC = 0                    # u32 bits
@@ -438,6 +442,77 @@ class ConnectionManager(object):
 
         nfct.nfct_close(h)
 
+    def delete(self, ipversion=None, proto=None, src=None, dst=None, sport=None, dport=None):
+        ct = nfct.nfct_new()
+        cth = nfct.nfct_open(CONNTRACK, 0)
+        ith = nfct.nfct_open(CONNTRACK, 0)
+        if not ith or not cth:
+            libc.perror("nfct_open")
+        if ipversion == 6:
+            nfct.nfct_set_attr_u8(ct, ATTR_L3PROTO, AF_INET6)
+            if src:
+                nfct.nfct_set_attr_u128(ct, ATTR_IPV6_SRC,
+                                    libc.inet_addr(src))
+            if dst:
+                nfct.nfct_set_attr_u128(ct, ATTR_IPV6_DST,
+                                    libc.inet_addr(dst))
+        elif ipversion == 4:
+            nfct.nfct_set_attr_u8(ct, ATTR_L3PROTO, AF_INET)
+            if src:
+                nfct.nfct_set_attr_u128(ct, ATTR_IPV4_SRC,
+                                    libc.inet_addr(src))
+            if dst:
+                nfct.nfct_set_attr_u128(ct, ATTR_IPV4_DST,
+                                    libc.inet_addr(dst))
+        else:
+            raise Exception("Unsupported protocol family!")
+        if proto:
+            nfct.nfct_set_attr_u8(ct, ATTR_L4PROTO, proto)
+        if sport:
+            nfct.nfct_set_attr_u16(ct, ATTR_PORT_SRC, libc.htons(sport))
+        if dport:
+            nfct.nfct_set_attr_u16(ct, ATTR_PORT_DST, libc.htons(dport))
+        buf = c.create_string_buffer(1024)
+        @NFCT_CALLBACK
+        def cb(type, ct, data):
+            if not nfct.nfct_cmp(data, ct, NFCT_CMP_ALL):
+                return NFCT_CB_CONTINUE
+            res = nfct.nfct_query(ith, NFCT_Q_DESTROY, ct)
+            if res < 0:
+                libc.perror("nfct_delete")
+                raise Exception("nfct_query failed!")
+            return NFCT_CB_CONTINUE
+        nfct.nfct_callback_register(cth, NFCT_T_ALL, cb, ct)
+        filter_dump = nfct.nfct_filter_dump_create()
+        if not filter_dump:
+            libc.perror("nfct_filter_dump_create")
+        ret = nfct.nfct_query(cth, NFCT_Q_DUMP_FILTER, filter_dump)
+        if ret < 0:
+            libc.perror("nfct_query")
+            raise Exception("nfct_query failed!")
+        nfct.nfct_filter_dump_destroy(filter_dump)
+        nfct.nfct_close(ith)
+        nfct.nfct_close(cth)
+
+    def flush(self):
+        ct = nfct.nfct_new()
+        if not ct:
+            libc.perror("nfct_new")
+            raise Exception("nfct_new failed!")
+
+        nfct.nfct_set_attr_u8(ct, ATTR_L3PROTO, self.__family)
+        h = nfct.nfct_open(CONNTRACK, 0)
+        if not h:
+            libc.perror("nfct_open")
+            raise Exception("nfct_open failed!")
+
+        ret = nfct.nfct_query(h, NFCT_Q_FLUSH, ct)
+        if ret == -1:
+            libc.perror("nfct_query")
+            raise Exception("nfct_query failed!")
+
+        nfct.nfct_close(h)
+
 
 __all__ = ["EventListener", "ConnectionManager",
            "parse_plaintext_event",
@@ -445,3 +520,4 @@ __all__ = ["EventListener", "ConnectionManager",
            "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL",
            "IPPROTO_TCP", "IPPROTO_UDP",
            "AF_INET", "AF_INET6"]
+
