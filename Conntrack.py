@@ -30,7 +30,8 @@ import logging
 import ctypes as c
 from ctypes.util import find_library
 from threading import Thread
-from socket import AF_INET, AF_INET6, IPPROTO_TCP, IPPROTO_UDP
+from socket import AF_INET, AF_INET6, IPPROTO_TCP, IPPROTO_UDP, IPPROTO_IP, IPPROTO_ICMP
+from collections import namedtuple
 
 nfct = c.CDLL(find_library('netfilter_conntrack'))
 libc = c.CDLL(find_library('c'))
@@ -86,6 +87,29 @@ NFCT_CB_CONTINUE = 1    # keep iterating through data
 NFCT_CB_STOLEN = 2    # like continue, but ct is not freed
 
 NFCT_CMP_ALL = 0
+NFCT_CMP_ORIG = (1 << 0)
+NFCT_CMP_REPL = (1 << 1)
+NFCT_CMP_TIMEOUT_EQ = (1 << 2)
+NFCT_CMP_TIMEOUT_GT = (1 << 3)
+NFCT_CMP_TIMEOUT_GE = (NFCT_CMP_TIMEOUT_EQ | NFCT_CMP_TIMEOUT_GT)
+NFCT_CMP_TIMEOUT_LT = (1 << 4)
+NFCT_CMP_TIMEOUT_LE = (NFCT_CMP_TIMEOUT_EQ | NFCT_CMP_TIMEOUT_LT)
+NFCT_CMP_MASK = (1 << 5)
+NFCT_CMP_STRICT = (1 << 6)
+
+# get option
+NFCT_GOPT_IS_SNAT = 0
+NFCT_GOPT_IS_DNAT = 1
+NFCT_GOPT_IS_SPAT = 2
+NFCT_GOPT_IS_DPAT = 3
+NFCT_GOPT_MAX = NFCT_GOPT_IS_DPAT
+
+# set option
+NFCT_SOPT_UNDO_SNAT = 0
+NFCT_SOPT_UNDO_DNAT = 1
+NFCT_SOPT_UNDO_SPAT = 2
+NFCT_SOPT_UNDO_DPAT = 3
+NFCT_SOPT_MAX = NFCT_SOPT_UNDO_DPAT
 
 # attributes
 ATTR_ORIG_IPV4_SRC = 0                    # u32 bits
@@ -175,6 +199,89 @@ ATTR_EXP_MASK = 2                         # pointer to conntrack object
 ATTR_EXP_TIMEOUT = 3                      # u32 bits
 ATTR_EXP_MAX = 4
 
+#ct optionsCT_OPT_ORIG_SRC_BIT	= 0,
+CT_OPT_ORIG_SRC_BIT = 0
+CT_OPT_ORIG_SRC = (1 << CT_OPT_ORIG_SRC_BIT)
+
+CT_OPT_ORIG_DST_BIT	= 1
+CT_OPT_ORIG_DST		= (1 << CT_OPT_ORIG_DST_BIT)
+
+CT_OPT_ORIG		= (CT_OPT_ORIG_SRC | CT_OPT_ORIG_DST)
+
+CT_OPT_REPL_SRC_BIT	= 2
+CT_OPT_REPL_SRC		= (1 << CT_OPT_REPL_SRC_BIT)
+
+CT_OPT_REPL_DST_BIT	= 3
+CT_OPT_REPL_DST		= (1 << CT_OPT_REPL_DST_BIT)
+
+CT_OPT_REPL		= (CT_OPT_REPL_SRC | CT_OPT_REPL_DST)
+
+CT_OPT_PROTO_BIT	= 4
+CT_OPT_PROTO		= (1 << CT_OPT_PROTO_BIT)
+
+CT_OPT_TUPLE_ORIG	= (CT_OPT_ORIG | CT_OPT_PROTO)
+CT_OPT_TUPLE_REPL	= (CT_OPT_REPL | CT_OPT_PROTO)
+
+CT_OPT_TIMEOUT_BIT	= 5
+CT_OPT_TIMEOUT		= (1 << CT_OPT_TIMEOUT_BIT)
+
+CT_OPT_STATUS_BIT	= 6
+CT_OPT_STATUS		= (1 << CT_OPT_STATUS_BIT)
+
+CT_OPT_ZERO_BIT		= 7
+CT_OPT_ZERO		= (1 << CT_OPT_ZERO_BIT)
+
+CT_OPT_EVENT_MASK_BIT	= 8
+CT_OPT_EVENT_MASK	= (1 << CT_OPT_EVENT_MASK_BIT)
+
+CT_OPT_EXP_SRC_BIT	= 9
+CT_OPT_EXP_SRC		= (1 << CT_OPT_EXP_SRC_BIT)
+
+CT_OPT_EXP_DST_BIT	= 10
+CT_OPT_EXP_DST		= (1 << CT_OPT_EXP_DST_BIT)
+
+CT_OPT_MASK_SRC_BIT	= 11
+CT_OPT_MASK_SRC		= (1 << CT_OPT_MASK_SRC_BIT)
+
+CT_OPT_MASK_DST_BIT	= 12
+CT_OPT_MASK_DST		= (1 << CT_OPT_MASK_DST_BIT)
+
+CT_OPT_NATRANGE_BIT	= 13
+CT_OPT_NATRANGE		= (1 << CT_OPT_NATRANGE_BIT)
+
+CT_OPT_MARK_BIT		= 14
+CT_OPT_MARK		= (1 << CT_OPT_MARK_BIT)
+
+CT_OPT_ID_BIT		= 15
+CT_OPT_ID		= (1 << CT_OPT_ID_BIT)
+
+CT_OPT_FAMILY_BIT	= 16
+CT_OPT_FAMILY		= (1 << CT_OPT_FAMILY_BIT)
+
+CT_OPT_SRC_NAT_BIT	= 17
+CT_OPT_SRC_NAT		= (1 << CT_OPT_SRC_NAT_BIT)
+
+CT_OPT_DST_NAT_BIT	= 18
+CT_OPT_DST_NAT		= (1 << CT_OPT_DST_NAT_BIT)
+
+CT_OPT_OUTPUT_BIT	= 19
+CT_OPT_OUTPUT		= (1 << CT_OPT_OUTPUT_BIT)
+
+CT_OPT_SECMARK_BIT	= 20
+CT_OPT_SECMARK		= (1 << CT_OPT_SECMARK_BIT)
+
+CT_OPT_BUFFERSIZE_BIT	= 21
+CT_OPT_BUFFERSIZE	= (1 << CT_OPT_BUFFERSIZE_BIT)
+
+CT_OPT_ANY_NAT_BIT	= 22
+CT_OPT_ANY_NAT		= (1 << CT_OPT_ANY_NAT_BIT)
+
+CT_OPT_ZONE_BIT		= 23
+CT_OPT_ZONE = (1 << CT_OPT_ZONE_BIT)
+
+CT_COMPARISON = (CT_OPT_PROTO | CT_OPT_ORIG | CT_OPT_REPL | \
+		       CT_OPT_MARK | CT_OPT_SECMARK |  CT_OPT_STATUS | \
+CT_OPT_ID | CT_OPT_ZONE)
 
 # message type
 NFCT_T_UNKNOWN = 0
@@ -193,12 +300,98 @@ NFCT_T_ERROR = (1 << NFCT_T_ERROR_BIT)
 libc.__errno_location.restype = c.POINTER(c.c_int)
 libc.strerror.restype = c.c_char_p
 
+u32_mask = namedtuple("u32_mask", "value, mask")
+tmpl = namedtuple("tmpl", "ct, exp, exptuple, mask, mark, filter_mark_kernel")
+options = 0
+
+def alloc_tmpl_objects():
+    tmpl(ct=nfct.nfct_new(), exptuple=nfct.nfct_new(), exp=nfct.nfct_new(), mask=nfct.nfct_new())
+    return not tmpl.ct and not tmpl.exptuple and not tmpl.mask and not tmpl.exp
+
+def free_tmpl_objects():
+    if (tmpl.ct):
+        nfct.nfct_destroy(tmpl.ct)
+    if (tmpl.exptuple):
+        nfct.nfct_destroy(tmpl.exptuple)
+    if (tmpl.mask):
+        nfct.nfct_destroy(tmpl.mask)
+    if (tmpl.exp):
+        nfct.nfct_destroy(tmpl.exp)
 
 def nfct_catch_errcheck(ret, func, args):
     if ret == -1:
         e = libc.__errno_location()[0]
         raise OSError(libc.strerror(e))
 
+def mark_cmp(m, ct):
+    return nfct.nfct_attri_is_set(ct, ATTR_MARK) and (
+        nfct.nfct_get_attr_u32(ct, ATTR_MARK) & m.mask) == m.value
+
+def filter_mark(options, ct, obj):
+    if ((options & CT_OPT_MARK) and not mark_cmp(obj, ct)):
+        return 1
+    else:
+        return 0
+
+def filter_nat(obj, ct):
+    check_srcnat = 1 if options & CT_OPT_SRC_NAT else 0
+    check_dstnat = 1 if options & CT_OPT_DST_NAT else 0
+    has_srcnat = 0
+    has_dstnat = 0
+
+    if (options & CT_OPT_ANY_NAT):
+        check_dstnat = 1
+        check_srcnat = 1
+
+    if check_srcnat:
+        check_address = check_port =0
+        if nfct.nfct_attr_is_set(obj, ATTR_SNAT_IPV4):
+            check_address = 1
+            ip = nfct.nfct_get_attr_u32(obj, ATTR_SNAT_IPV4)
+            if nfct.nfct_getobjopt(ct, NFCT_GOPT_IS_SNAT) and (ip == nfct.nfct_get_attr_u32(ct, ATTR_REPL_IPV4_DST)):
+                has_srcnat = 1
+        if nfct.nfct_attr_is_set(obj, ATTR_SNAT_PORT):
+            ret = 0
+            check_port = 1
+            port = nfct.nfct_get_attr_u16(obj, ATTR_SNAT_PORT)
+            if nfct.nfct_getobjopt(ct, NFCT_GOPT_IS_SPAT) and (port == nfct.nfct_get_attr_u16(ct, ATTR_REPL_PORT_DST)):
+                ret = 1
+            if check_address and has_srcnat and not ret:
+                has_srcnat = 0
+            if not check_address and ret:
+                has_srcnat = 1
+        if not check_address and not check_port and (nfct.nfct_getobjopt(ct, NFCT_GOPT_IS_SNAT) or nfct.nfct_getobjopt(ct, NFCT_GOPT_IS_SPAT)):
+            has_srcnat = 1
+
+    if check_dstnat:
+        check_address = check_port =0
+        if nfct.nfct_attr_is_set(obj, ATTR_DNAT_IPV4):
+            check_address = 1
+            ip = nfct.nfct_get_attr_u32(obj, ATTR_DNAT_IPV4)
+            if nfct.nfct_getobjopt(ct, NFCT_GOPT_IS_DNAT) and (ip == nfct.nfct_get_attr_u32(ct, ATTR_REPL_IPV4_SRC)):
+                has_srcnat = 1
+        if nfct.nfct_attr_is_set(obj, ATTR_DNAT_PORT):
+            ret = 0
+            check_port = 1
+            port = nfct.nfct_get_attr_u16(obj, ATTR_DNAT_PORT)
+            if nfct.nfct_getobjopt(ct, NFCT_GOPT_IS_DPAT) and (port == nfct.nfct_get_attr_u16(ct, ATTR_REPL_PORT_SRC)):
+                ret = 1
+            if check_address and has_dstnat and not ret:
+                has_dstnat = 0
+            if not check_address and ret:
+                has_dstnat = 1
+        if not check_address and not check_port and (nfct.nfct_getobjopt(ct, NFCT_GOPT_IS_DNAT) or nfct.nfct_getobjopt(ct, NFCT_GOPT_IS_DPAT)):
+            has_srcnat = 1
+
+    if (options & CT_OPT_ANY_NAT):
+        return not(has_srcnat or has_dstnat)
+    elif ((options & CT_OPT_SRC_NAT)) and (options & CT_OPT_DST_NAT):
+        return not (has_srcnat and has_dstnat)
+    elif (options & CT_OPT_SRC_NAT):
+        return not has_srcnat
+    elif (options & CT_OPT_DST_NAT):
+        return not has_dstnat
+    return 0
 
 def parse_plaintext_event(event):
     '''
@@ -285,7 +478,7 @@ class ConnectionManager(object):
     Has ability to destroy connections.
     '''
 
-    def __init__(self, fmt=NFCT_O_XML, family=AF_INET):
+    def __init__(self, fmt=NFCT_O_DEFAULT, family=AF_INET):
         '''
         Create new ConnectionManager object
 
@@ -443,7 +636,9 @@ class ConnectionManager(object):
         nfct.nfct_close(h)
 
     def delete(self, ipversion=None, proto=None, src=None, dst=None, sport=None, dport=None):
+        global options
         ct = nfct.nfct_new()
+        mask=nfct.nfct_new()
         cth = nfct.nfct_open(CONNTRACK, 0)
         ith = nfct.nfct_open(CONNTRACK, 0)
         if not ith or not cth:
@@ -468,6 +663,7 @@ class ConnectionManager(object):
             raise Exception("Unsupported protocol family!")
         if proto:
             nfct.nfct_set_attr_u8(ct, ATTR_L4PROTO, proto)
+            options |= CT_OPT_PROTO
         if sport:
             nfct.nfct_set_attr_u16(ct, ATTR_PORT_SRC, libc.htons(sport))
         if dport:
@@ -475,12 +671,20 @@ class ConnectionManager(object):
         buf = c.create_string_buffer(1024)
         @NFCT_CALLBACK
         def cb(type, ct, data):
-            if not nfct.nfct_cmp(data, ct, NFCT_CMP_ALL):
+            obj = data
+            if (filter_nat(obj, ct)):
+                return NFCT_CB_CONTINUE
+            if filter_mark(options, ct, obj):
+                return NFCT_CB_CONTINUE
+            if (options & CT_COMPARISON) and not nfct.nfct_cmp(data, ct, NFCT_CMP_ALL | NFCT_CMP_MASK):
                 return NFCT_CB_CONTINUE
             res = nfct.nfct_query(ith, NFCT_Q_DESTROY, ct)
             if res < 0:
                 libc.perror("nfct_delete")
                 raise Exception("nfct_query failed!")
+            nfct.nfct_snprintf(buf, 1024, ct, NFCT_T_UNKNOWN, self.__format,
+                               NFCT_OF_SHOW_LAYER3)
+            print buf.value
             return NFCT_CB_CONTINUE
         nfct.nfct_callback_register(cth, NFCT_T_ALL, cb, ct)
         filter_dump = nfct.nfct_filter_dump_create()
@@ -491,6 +695,7 @@ class ConnectionManager(object):
             libc.perror("nfct_query")
             raise Exception("nfct_query failed!")
         nfct.nfct_filter_dump_destroy(filter_dump)
+        nfct.nfct_destroy(mask)
         nfct.nfct_close(ith)
         nfct.nfct_close(cth)
 
@@ -520,4 +725,3 @@ __all__ = ["EventListener", "ConnectionManager",
            "NFCT_T_UPDATE", "NFCT_T_DESTROY", "NFCT_T_ALL",
            "IPPROTO_TCP", "IPPROTO_UDP",
            "AF_INET", "AF_INET6"]
-
