@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
+from Cython.Build import cythonize
 
 setup(name='Conntrack',
     version='0.5',
@@ -9,6 +10,8 @@ setup(name='Conntrack',
     author_email='andrew@ei-grad.ru',
     url='http://github.com/ei-grad/python-conntrack',
     packages=['Conntrack'],
+    ext_modules=cythonize("Conntrack/constants.pyx"),
+    install_requires=['Cython'],
 
     classifiers=(
         'Development Status :: 2 - Pre-Alpha',
