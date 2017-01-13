@@ -8,7 +8,7 @@ setup(name='Conntrack',
     author='Andrew Grigorev',
     author_email='andrew@ei-grad.ru',
     url='http://github.com/ei-grad/python-conntrack',
-    py_modules=['Conntrack', 'constants'],
+    packages=['Conntrack'],
 
     classifiers=(
         'Development Status :: 2 - Pre-Alpha',

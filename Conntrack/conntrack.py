@@ -32,7 +32,8 @@ from ctypes.util import find_library
 from threading import Thread
 from socket import AF_INET, AF_INET6, IPPROTO_TCP, IPPROTO_UDP, IPPROTO_IP, IPPROTO_ICMP, AF_UNSPEC
 from collections import namedtuple
-from constants import *
+
+from Conntrack.constants import *
 
 
 nfct = c.CDLL(find_library('netfilter_conntrack'))
