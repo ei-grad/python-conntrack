@@ -383,7 +383,7 @@ class ConnectionManager(object):
                 return NFCT_CB_CONTINUE
             nfct.nfct_snprintf(buf, 1024, ct, NFCT_T_UNKNOWN, self.__format,
                                NFCT_OF_SHOW_LAYER3)
-            print buf.value
+            print(buf.value)
             return NFCT_CB_CONTINUE
 
         nfct.nfct_callback_register(cth, NFCT_T_ALL, cb, ct)
@@ -504,7 +504,7 @@ class ConnectionManager(object):
                 raise Exception("nfct_query failed!")
             nfct.nfct_snprintf(buf, 1024, ct, NFCT_T_UNKNOWN, self.__format,
                                NFCT_OF_SHOW_LAYER3)
-            print buf.value
+            print(buf.value)
             return NFCT_CB_CONTINUE
         nfct.nfct_callback_register(cth, NFCT_T_ALL, cb, ct)
         filter_dump = nfct.nfct_filter_dump_create()
@@ -617,7 +617,7 @@ class ConnectionManager(object):
             nfct.nfct_destroy(tmp)
             nfct.nfct_snprintf(buf, 1024, ct, NFCT_T_UNKNOWN, self.__format,
                                NFCT_OF_SHOW_LAYER3)
-            print buf.value
+            print(buf.value)
             return NFCT_CB_CONTINUE
 
         nfct.nfct_callback_register(cth, NFCT_T_ALL, cb, ct)
